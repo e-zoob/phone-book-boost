@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from .contact import Contact
 from .broker import publish
 
@@ -10,8 +10,12 @@ async def root():
 
 @app.post("/contacts/")
 async def create_address(contact: Contact):
-    publish(contact)
-    return 
+    try:
+        publish(contact)
+    except Exception as e:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+
+    return contact
 
 
     
