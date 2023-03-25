@@ -2,7 +2,6 @@ from .contact import Contact
 import pika
 import json
 
-
 def connect():
     connection = pika.BlockingConnection(
         pika.ConnectionParameters('localhost'))
@@ -10,11 +9,9 @@ def connect():
     channel.queue_declare(queue='phone-book')
     return connection, channel
 
-
 def close(connection: pika.BlockingConnection):
     connection.close()
     return
-
 
 def publish(contact: Contact):
 
