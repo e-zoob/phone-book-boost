@@ -1,31 +1,25 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pika
-import pickle
+import json
 
 class Contact(BaseModel):
     name: str
     number: str
 
-# def connect():
-#     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-#     channel = connection.channel()
-#     return channel.queue_declare(queue='phone-book')
-
-# def disconnect(connection: pika.BlockingConnection):
-#     connection.close()
-
 def publish(contact: Contact): 
+    
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='phone-book')
-    body_contact = pickle.dumps(contact)
+    
+    body_contact = json.dumps(contact, indent=4, default=str)
     
     channel.basic_publish(exchange='',
                           routing_key='phone-book',
                           body=body_contact)
     connection.close()
-
+    return 
 
 app = FastAPI()
 
