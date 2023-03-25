@@ -8,7 +8,6 @@ class Contact(BaseModel):
     number: str
 
 def publish(contact: Contact): 
-    
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='phone-book')
