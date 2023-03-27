@@ -1,0 +1,24 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    hostname: node1
+    networks:
+      - mynetwork
+
+  srv_publisher:
+    image: publisherimage
+    ports:
+      - 80:80
+    depends_on:
+      - rabbitmq
+    hostname: node2
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
