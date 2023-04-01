@@ -1,12 +1,7 @@
 ﻿using MongoDB.Driver;
 using srv_getallnumbers;
 
-var connectionString = "mongodb://127.0.0.1:27017/?authSource=meteor&compressors=disabled&gssapiServiceName=mongodb&ssl=false";
-if (connectionString == null)
-{
-    Console.WriteLine("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable");
-    Environment.Exit(0);
-}
+var connectionString = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0";
 
 var client = new MongoClient(connectionString);
 
@@ -14,6 +9,10 @@ var collection = client.GetDatabase("meteor").GetCollection<Contact>("phoneconta
 
 var filter = Builders<Contact>.Filter.Empty;;
 
-var document = collection.Find(filter);
+var contacts = collection.Find<Contact>(filter).ToList();
 
-Console.WriteLine(document);
+foreach(var contact in contacts)
+{
+    Console.WriteLine($"{contact.Name}: {contact.Number}");
+}
+
