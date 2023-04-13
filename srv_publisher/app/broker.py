@@ -4,7 +4,7 @@ import json
 
 def connect():
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='node1',port=5672))
+        pika.ConnectionParameters(host='rabbitmq',port=5672)) 
     channel = connection.channel()
     channel.queue_declare(queue='phone-book')
     return connection, channel
