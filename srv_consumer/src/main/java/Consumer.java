@@ -9,8 +9,10 @@ public class Consumer {
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        Channel channel;
+        try (Connection connection = factory.newConnection()) {
+            channel = connection.createChannel();
+        }
 
         channel.queueDeclare("phone-book", false, false, false, null);
 
