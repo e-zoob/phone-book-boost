@@ -1,7 +1,9 @@
 name: Build and Test Services
 
 on:
-  push: { branches: feature/srv-publisher-CI }
+  push: 
+     branches:
+      - feature/srv-publisher-CI
 
 jobs:
   python_service:
