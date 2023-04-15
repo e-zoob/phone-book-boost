@@ -1,0 +1,29 @@
+name: Build and Test Services
+
+on:
+  push: { branches: feature/srv-publisher-CI }
+
+jobs:
+  python_service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Create Virtual Environment and Install Dependencies
+        working-directory: ./srv_publisher
+        run: make install
+
+      - name: Run Tests
+        working-directory: ./srv_publisher
+        run: make test
+
+      - name: Clean Workspace
+        working-directory: ./srv_publisher
+        if: always()
+        run: make clean
