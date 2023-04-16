@@ -19,7 +19,7 @@ venv:
 	$(PYTHON) -m venv $(VENV)
 
 install: venv
-	$(PYTHON) -m $(PIP) install --upgrade pip
+	$(PYTHON) -m pip install --upgrade pip
 	$(PIP) install httpx install httpx
 	$(PIP) install pytest	
 	$(PIP) install -r requirements.txt
