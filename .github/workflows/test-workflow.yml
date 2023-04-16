@@ -14,11 +14,7 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Create Virtual Environment and Install Dependencies
-        working-directory: ./srv_publisher
-        run: make install
-
-      - name: Run Tests
+      - name: Build and Test
         working-directory: ./srv_publisher
         run: make test
 
