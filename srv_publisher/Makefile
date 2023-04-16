@@ -19,6 +19,7 @@ venv:
 	$(PYTHON) -m venv $(VENV)
 
 install: venv
+	$(PIP) install pytest
 	$(PIP) install -r requirements.txt
 
 test: install
