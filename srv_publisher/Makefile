@@ -1,4 +1,4 @@
-PYTHON := python
+PYTHON := python3
 VENV := venv
 PIP := $(VENV)/bin/pip
 ACTIVATE := . $(VENV)/bin/activate
@@ -19,8 +19,8 @@ venv:
 	$(PYTHON) -m venv $(VENV)
 
 install: venv
-	$(PYTHON) -m $(PIP) install --upgrade $(PIP)
-	$(PIP) install httpx
+	$(PYTHON) -m $(PIP) install --upgrade pip
+	$(PIP) install httpx install httpx
 	$(PIP) install pytest	
 	$(PIP) install -r requirements.txt
 
