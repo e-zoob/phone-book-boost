@@ -1,10 +1,7 @@
 name: Build and Test Services
 
-on:
-  push: 
-     branches:
-      - feature/srv-publisher-CI
-
+on: [push]
+   
 jobs:
   python_service:
     runs-on: ubuntu-latest
