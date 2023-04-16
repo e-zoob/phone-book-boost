@@ -1,4 +1,4 @@
-PYTHON := python3
+PYTHON := python
 VENV := venv
 PIP := $(VENV)/bin/pip
 ACTIVATE := . $(VENV)/bin/activate
@@ -19,7 +19,9 @@ venv:
 	$(PYTHON) -m venv $(VENV)
 
 install: venv
-	$(PIP) install pytest
+	$(PYTHON) -m $(PIP) install --upgrade $(PIP)
+	$(PIP) install httpx
+	$(PIP) install pytest	
 	$(PIP) install -r requirements.txt
 
 test: install
@@ -27,8 +29,3 @@ test: install
 
 clean:
 	rm -rf $(VENV) __pycache__ .pytest_cache
-
-    
-
-
-
