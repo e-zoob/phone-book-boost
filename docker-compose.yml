@@ -6,19 +6,19 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    hostname: node1
     networks:
       - mynetwork
 
   srv_publisher:
-    image: publisherimage
+    build: ./srv_publisher
+    container_name: "publisher" 
     ports:
       - 80:80
     depends_on:
       - rabbitmq
-    hostname: node2
     networks:
       - mynetwork
-
+      
 networks:
   mynetwork:
+    
