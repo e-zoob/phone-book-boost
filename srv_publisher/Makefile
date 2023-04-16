@@ -17,6 +17,7 @@ help:
 
 venv:
 	$(PYTHON) -m venv $(VENV)
+	$(ACTIVATE)
 
 install: venv
 	$(PYTHON) -m pip install --upgrade pip
@@ -25,7 +26,7 @@ install: venv
 	$(PIP) install -r requirements.txt
 
 test: install
-	$(ACTIVATE) && $(PYTEST)
+	$(PYTEST)
 
 clean:
 	rm -rf $(VENV) __pycache__ .pytest_cache
