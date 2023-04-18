@@ -1,4 +1,8 @@
-public class Contact {
+package domain;
+
+import java.io.Serializable;
+
+public class Contact implements Serializable {
     private String name;
     private String number;
 

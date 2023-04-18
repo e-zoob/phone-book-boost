@@ -1,3 +1,6 @@
+package application;
+
+import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -6,13 +9,10 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-import helpers.Converter;
 import org.bson.Document;
 
-import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Consumer {
     public static void main(String[] argv) throws Exception {
@@ -21,19 +21,12 @@ public class Consumer {
         Channel channel;
         Connection connection = factory.newConnection();
             channel = connection.createChannel();
-
-
         channel.queueDeclare("phone-book", false, false, false, null);
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-
-//            byte[] body = delivery.getBody();
-//            Contact contact = (Contact) Converter.Deserialize(body);
-
-
-            //System.out.println(contact);
         };
+
         channel.basicConsume("phone-book", true, deliverCallback, consumerTag -> {});
 
 
@@ -52,8 +45,6 @@ public class Consumer {
 
         database.listCollectionNames().forEach(System.out::println);
 
-//        List<Document> databases = mongoClient.listDatabases().into(new ArrayList<>());
-//        databases.forEach(db -> System.out.println(db.toJson()));
 
     }
 
