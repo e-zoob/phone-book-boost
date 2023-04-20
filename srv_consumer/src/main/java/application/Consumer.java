@@ -31,19 +31,11 @@ public class Consumer {
 
 
 
-        MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017");
-        MongoDatabase database = mongoClient.getDatabase("meteor");
-        String collectionName = "contacts";
-        boolean collectionExist = database.listCollectionNames().into(new ArrayList()).contains(collectionName);
-
-        if (!collectionExist){
-            database.createCollection("contacts");
-        }
-        MongoCollection<Document> contacts = database.getCollection(collectionName);
 
 
 
-        database.listCollectionNames().forEach(System.out::println);
+
+        //database.listCollectionNames().forEach(System.out::println);
 
 
     }
