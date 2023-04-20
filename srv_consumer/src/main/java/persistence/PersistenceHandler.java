@@ -5,12 +5,10 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import domain.Contact;
-import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class PersistenceHandler<T> {
+public class PersistenceHandler {
     //TODO pass uri in configuration
     private MongoDatabase GetMongoDb(String dbName) {
 
@@ -34,7 +32,7 @@ public class PersistenceHandler<T> {
     //TODO pass dbName in configuration.
     public MongoCollection<Contact> GetCollection(String dbName, String collectionName){
         MongoDatabase database = GetMongoDb(dbName);
-        boolean collectionExist = database.listCollectionNames().into(new ArrayList()).contains(collectionName);
+        boolean collectionExist = database.listCollectionNames().into(new ArrayList<String>()).contains(collectionName);
 
         if (!collectionExist){
             database.createCollection(collectionName);
@@ -42,7 +40,7 @@ public class PersistenceHandler<T> {
         return database.getCollection(collectionName, Contact.class);
     }
 
-    public void Insert(String dbName, String collectionName, Contact contact){
+    public void InsertContact(String dbName, String collectionName, Contact contact){
         MongoCollection<Contact> collection = GetCollection(dbName, collectionName);
         collection.insertOne(contact);
     }

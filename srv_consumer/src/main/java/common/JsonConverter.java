@@ -3,11 +3,11 @@ import com.google.gson.Gson;
 import domain.Contact;
 
 public class JsonConverter {
-    private Gson gson;
-    public JsonConverter(){
-        gson = new Gson();
-    }
-    public Contact Deserialize(String message){
+    private static Gson gson;
+//    public JsonConverter(){
+//        this.gson = new Gson();
+//    }
+    public static Contact Deserialize(String message, Gson gson){
         return gson.fromJson(message, Contact.class);
     }
 }
