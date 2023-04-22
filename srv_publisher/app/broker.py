@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 
 def connect():
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost',port=5672)) 
+        pika.ConnectionParameters(host='rabbitmq',port=5672)) 
     channel = connection.channel()
     channel.queue_declare(queue='phone-book')
     return connection, channel
