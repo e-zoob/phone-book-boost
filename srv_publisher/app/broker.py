@@ -1,4 +1,4 @@
-from contact import Contact
+from .contact import Contact
 import pika
 import json
 from fastapi.encoders import jsonable_encoder
