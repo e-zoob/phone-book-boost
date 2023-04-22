@@ -15,35 +15,14 @@ import java.util.List;
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-public class PersistenceHandler {
-    public PersistenceHandler(){}
-//    private MongoDatabase GetMongoDb(String dbName) {
-//
-//        CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-//        CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
-//        MongoDatabase database;
-//        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
-//            database = mongoClient.getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
-//        }
-//        return database;
-//
-//    }
-//    //TODO pass dbName in configuration.
-//    public MongoCollection<Contact> GetCollection(String dbName, String collectionName){
-//        MongoDatabase database = GetMongoDb(dbName);
-//        boolean collectionExist = database.listCollectionNames().into(new ArrayList<String>()).contains(collectionName);
-//
-//        if (!collectionExist){
-//            database.createCollection(collectionName);
-//        }
-//        return database.getCollection(collectionName, Contact.class);
-//    }
+public class Persistence {
+    public Persistence(){}
 
     public void InsertContact(String dbName, String collectionName, Contact contact){
         CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
         CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
         MongoDatabase database;
-        MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017");
+        MongoClient mongoClient = MongoClients.create(/*"mongodb://127.0.0.1:27017"*/);
         database = mongoClient.getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
 
         boolean collectionExist = database.listCollectionNames().into(new ArrayList<String>()).contains(collectionName);
@@ -51,7 +30,6 @@ public class PersistenceHandler {
         if (!collectionExist){
             database.createCollection(collectionName);
         }
-
         MongoCollection<Contact> collection = database.getCollection(collectionName, Contact.class);
         collection.insertOne(contact);
     }

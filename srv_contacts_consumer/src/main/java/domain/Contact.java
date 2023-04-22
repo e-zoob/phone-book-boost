@@ -20,6 +20,10 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
+    public String getName(){ return name;}
+
+    public String getNumber() {return number;}
+
     public void setName(String name) {
         this.name = name;
     }
@@ -27,8 +31,4 @@ public class Contact implements Serializable {
     public void setNumber(String number) {
         this.number = number;
     }
-
-    public String getName(){ return name;}
-
-    public String getNumber() {return number;}
 }
