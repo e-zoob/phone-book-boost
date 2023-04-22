@@ -1,0 +1,14 @@
+name: Build and Test Docker
+
+on: [push]
+ 
+jobs:
+  python_service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Test
+        working-directory: ./srv_publisher
+        run: docker build --target test -t test-img .
+    
