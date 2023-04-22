@@ -7,7 +7,7 @@ var client = new MongoClient(connectionString);
 
 var collection = client.GetDatabase("meteor").GetCollection<Contact>("phonecontacts");
 
-var filter = Builders<Contact>.Filter.Empty;;
+var filter = Builders<Contact>.Filter.Empty;
 
 var contacts = collection.Find<Contact>(filter).ToList();
 

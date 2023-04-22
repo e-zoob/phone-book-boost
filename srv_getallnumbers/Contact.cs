@@ -8,9 +8,9 @@ namespace srv_getallnumbers
     {
         [BsonId]
         public ObjectId InternalId { get; init;}
-        [BsonElement("name")]
+        [BsonElement("Name")]
         public string? Name { get; set;}
-        [BsonElement("number")]
+        [BsonElement("Number")]
         public string? Number { get; init;}
     }
 }
