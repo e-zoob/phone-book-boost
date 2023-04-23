@@ -1,6 +1,7 @@
 from .contact import Contact
 import pika
 import json
+from fastapi.encoders import jsonable_encoder
 
 def connect():
     connection = pika.BlockingConnection(
@@ -16,11 +17,13 @@ def close(connection: pika.BlockingConnection):
 def publish(contact: Contact):
 
     connection, channel = connect()
-    body_contact = json.dumps(contact, indent=4, default=str)
+    body_contact = jsonable_encoder(contact)
+    body_json = json.dumps(body_contact, indent=4, default=str)
+    
 
     channel.basic_publish(exchange='',
                         routing_key='phone-book',
-                        body=body_contact)
+                        body=body_json)
     close(connection)
 
     return 
