@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from .contact import Contact
-from .broker import publish
+from app.contact import Contact
+from app.broker import publish
 
 app = FastAPI()
 
