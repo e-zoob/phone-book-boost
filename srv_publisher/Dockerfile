@@ -9,6 +9,6 @@ RUN pip install pytest \ pip install httpx
 RUN pytest
 
 FROM build AS final
-WORKDIR /app
-COPY --from=build /app ./
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+WORKDIR /phone-book-boost/srv_publisher
+COPY --from=build /phone-book-boost/srv_publisher/app ./
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
