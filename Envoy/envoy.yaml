@@ -50,10 +50,3 @@ static_resources:
                     socket_address:
                       address: srv_publisher
                       port_value: 80
-      circuit_breakers:
-        thresholds:
-          - priority: DEFAULT
-            max_connections: 100
-            max_pending_requests: 10000
-            max_requests: 10000
-            max_retries: 3
