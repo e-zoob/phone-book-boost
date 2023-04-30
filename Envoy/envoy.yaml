@@ -1,0 +1,78 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address:
+      protocol: TCP
+      address: 0.0.0.0
+      port_value: 9901
+static_resources:
+
+  listeners:
+  - name: listener_0
+    address:
+      socket_address:
+        protocol: TCP
+        address: 0.0.0.0
+        port_value: 10000
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+            route_config:
+              name: local_route
+              virtual_hosts:
+                - name: local_service
+                  domains: ["*"]
+                  routes:
+                    - match:
+                        prefix: "/"
+                      route:
+                        cluster: srv_publisher
+                        timeout: 0s
+                        max_stream_duration:
+                          grpc_timeout_header_max: 0s
+                        retry_policy:
+                          retry_on: 5xx,connect-failure
+                          num_retries: 3
+                          retry_back_off:
+                            base_interval: 0.25s
+                            max_interval: 2s
+                            jitter: 0.2
+                        upgrade_configs:
+                          - upgrade_type: websocket
+                            enabled: false
+                            settings:
+                              max_concurrent_streams: 100
+          http_filters:
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+  #todo config transport_socket for tls termination
+  clusters:
+    - name: srv_publisher
+      connect_timeout: 0.25s
+      type: LOGICAL_DNS 
+      # Comment out the following line to test on v6 networks
+      dns_lookup_family: V4_ONLY
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: srv_publisher
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: srv_publisher
+                      port_value: 80
+      circuit_breakers:
+        thresholds:
+          - priority: DEFAULT
+            max_connections: 100
+            max_pending_requests: 10000
+            max_requests: 10000
+            max_retries: 3
+  cluster_manager:
+    upstream_bind_config:
+      source_address: { address: 0.0.0.0 }
