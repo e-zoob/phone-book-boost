@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -49,6 +53,14 @@ func main() {
 	)
 
 	failOnError(err, "Failed to register a consumer")
+	ctx := context.TODO()
+	opts := options.Client().ApplyURI("mongodb://localhost:27017")
+
+	client, err := mongo.Connect(ctx, opts)
+	if err != nil {
+		panic(err)
+	}
+	defer client.Disconnect(ctx)
 
 	var forever chan struct{}
 
