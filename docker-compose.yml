@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.8"
 services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -16,6 +16,18 @@ services:
       - 80:80
     depends_on:
       - rabbitmq
+    networks:
+      - mynetwork
+
+  envoy:
+    build: Envoy/
+    container_name: envoy
+    ports:
+      - "9901:9901"
+      - "10000:10000"
+      #- "10001:10001"
+    volumes:
+      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
     networks:
       - mynetwork
 
