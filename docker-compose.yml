@@ -28,7 +28,16 @@ services:
       - rabbitmq
     networks:
       - mynetwork
-
+  
+  srv_consumer:
+    build: ./srv_consumer
+    container_name: "consumer"
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - mynetwork
+  
   envoy:
     build: Envoy/
     container_name: envoy

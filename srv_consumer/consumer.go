@@ -72,9 +72,14 @@ func main() {
 			} else {
 				coll := client.Database("phone-contacts").Collection("contacts")
 				_, err = coll.InsertOne(context.TODO(), contact)
+				if err != nil {
+					panic(err)
+				}
+				log.Printf("Contact saved")
 			}
 		}
 	}()
 
+	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 	<-forever
 }
