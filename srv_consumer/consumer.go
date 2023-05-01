@@ -18,8 +18,8 @@ func failOnError(err error, msg string) {
 }
 
 type Contact struct {
-	Name   string `json:"name"`
-	Number int    `json:"number"`
+	Name   string `json:"name" bson:"name,omitempty"`
+	Number int    `json:"number" bson:"number,omitempty"`
 }
 
 func main() {
@@ -70,12 +70,11 @@ func main() {
 			if err := json.Unmarshal(d.Body, &contact); err != nil {
 				log.Println("Failed to unmarshal:", err)
 			} else {
-				log.Println(contact.Name)
-				log.Println(contact.Number)
-
+				coll := client.Database("phone-contacts").Collection("contacts")
+				_, err = coll.InsertOne(context.TODO(), contact)
 			}
 		}
 	}()
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+
 	<-forever
 }
