@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -10,6 +11,11 @@ func failOnError(err error, msg string) {
 	if err != nil {
 		log.Panicf("%s: %s", msg, err)
 	}
+}
+
+type Contact struct {
+	Name   string `json:"name"`
+	Number int    `json:"number"`
 }
 
 func main() {
@@ -48,7 +54,14 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Received a message: %s", d.Body)
+			var contact Contact
+			if err := json.Unmarshal(d.Body, &contact); err != nil {
+				log.Println("Failed to unmarshal:", err)
+			} else {
+				log.Println(contact.Name)
+				log.Println(contact.Number)
+
+			}
 		}
 	}()
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
