@@ -8,7 +8,17 @@ services:
       - 15672:15672
     networks:
       - mynetwork
-
+  
+  mongodb:
+    image: mongo:latest
+    container_name: "mongo"
+    ports:
+      - "27017:27017"
+    networks:
+      - mynetwork
+    volumes:
+      - dbdata:/data/db
+  
   srv_publisher:
     build: ./srv_publisher
     container_name: "publisher"
@@ -18,7 +28,17 @@ services:
       - rabbitmq
     networks:
       - mynetwork
-
+  
+  srv_consumer:
+    build: ./srv_consumer
+    container_name: "consumer"
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - mynetwork
+    restart: always
+  
   envoy:
     build: Envoy/
     container_name: envoy
@@ -33,3 +53,5 @@ services:
 
 networks:
   mynetwork:
+volumes:
+  dbdata:
