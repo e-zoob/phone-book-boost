@@ -49,7 +49,7 @@ func main() {
 
 	failOnError(err, "Failed to register a consumer")
 	ctx := context.TODO()
-	opts := options.Client().ApplyURI("mongodb://localhost:27017")
+	opts := options.Client().ApplyURI("mongodb://mongo:27017")
 
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
