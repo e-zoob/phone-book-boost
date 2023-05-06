@@ -9,4 +9,4 @@ COPY *.go ./
 RUN make dep && make build
 RUN make vet
 
-CMD ["./consumer"]
+CMD ["./srv_consumer"]

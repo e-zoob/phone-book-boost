@@ -17,11 +17,6 @@ func failOnError(err error, msg string) {
 	}
 }
 
-type Contact struct {
-	Name   string `json:"name" bson:"name,omitempty"`
-	Number int    `json:"number" bson:"number,omitempty"`
-}
-
 func main() {
 
 	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")

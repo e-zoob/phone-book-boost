@@ -1,8 +1,8 @@
 build:
-	go build -o consumer consumer.go
+	go build
 
 run:
-	./consumer
+	./srv_consumer
 
 dep: 
 	go mod tidy
