@@ -37,6 +37,7 @@ services:
       - mongodb
     networks:
       - mynetwork
+    restart: always
   
   envoy:
     build: Envoy/
