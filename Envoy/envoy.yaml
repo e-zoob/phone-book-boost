@@ -33,7 +33,14 @@ static_resources:
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-  #todo: config transport_socket for tls termination
+            tls_context:
+              common_tls_context:
+                tls_certificates:
+                  - certificate_chain:
+                      filename: "/etc/ssl/certs/https.crt"
+                    private_key:
+                      filename: "/etc/ssl/certs/key.pem"
+
   clusters:
     - name: srv_publisher
       connect_timeout: 0.25s
@@ -49,4 +56,9 @@ static_resources:
                   address:
                     socket_address:
                       address: srv_publisher
-                      port_value: 80
+                      port_value: 80 #!!
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+          sni: srv_publisher
