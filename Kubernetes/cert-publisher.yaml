@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: publisher
+  namespace: default
+spec:
+  secretName: publisher
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+  dnsNames:
+    - publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com

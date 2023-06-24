@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: traefik
+  name: rabbitmq-publisher-ingress
+  namespace: default
+spec:
+  rules:
+    - host: publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: publisher
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+
+    - host: rabbitmq.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+      http:
+          paths:
+            - backend:
+                service:
+                  name: rabbitmq
+                  port:
+                    number: 15672
+              path: /
+              pathType: Prefix
+
+  tls:
+    - hosts:
+        - publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+      secretName: publisher
+        - rabbitmq.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+      secretName: rabbitmq
