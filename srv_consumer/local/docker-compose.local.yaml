@@ -19,18 +19,8 @@ services:
     volumes:
       - dbdata:/data/db
 
-  srv_publisher:
-    build: ./srv_publisher
-    container_name: "publisher"
-    ports:
-      - 80:80
-    depends_on:
-      - rabbitmq
-    networks:
-      - mynetwork
-
   srv_consumer:
-    build: ./srv_consumer
+    build: ../
     container_name: "consumer"
     depends_on:
       - rabbitmq
@@ -44,18 +34,6 @@ services:
       - MONGO_CONNSTRING=mongodb://mongo:27017
       - MONGO_DBNAME=phone-contacts
       - MONGO_COLLECTION_NAME=contacts
-
-  envoy:
-    build: Envoy/
-    container_name: envoy
-    ports:
-      - "9901:9901"
-      - "10000:10000"
-      #- "10001:10001"
-    volumes:
-      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-    networks:
-      - mynetwork
 
 networks:
   mynetwork:

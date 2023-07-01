@@ -18,6 +18,17 @@ spec:
       containers:
         - name: consumer
           image: "erydegio/srv_consumer"
+          env:
+            - name: RABBITMQ
+              value: amqp://guest:guest@rabbitmq:5672/
+            - name: QUEUE_NAME
+              value: phone-book
+            - name: MONGO_CONNSTRING
+              value: mongodb://mongo:27017
+            - name: MONGO_DBNAME
+              value: phone-contacts
+            - name: MONGO_COLLECTION_NAME
+              value: contacts
 ---
 apiVersion: v1
 kind: Service

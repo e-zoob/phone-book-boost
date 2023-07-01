@@ -8,7 +8,7 @@ metadata:
   namespace: default
 spec:
   rules:
-    - host: publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+    - host: publisher.dnsname
       http:
         paths:
           - backend:
@@ -19,7 +19,7 @@ spec:
             path: /
             pathType: Prefix
 
-    - host: rabbitmq.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+    - host: rabbitmq.dnsname
       http:
           paths:
             - backend:
@@ -32,7 +32,7 @@ spec:
 
   tls:
     - hosts:
-        - publisher.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+        - publisher.dnsname
       secretName: publisher
-        - rabbitmq.76673ac1-8c48-4bba-9793-3d09d7d6fc14.lb.civo.com
+        - rabbitmq.dnsname
       secretName: rabbitmq
