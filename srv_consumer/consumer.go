@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+    "os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,7 +20,8 @@ func failOnError(err error, msg string) {
 
 func main() {
 
-	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
+	conn, err := amqp.Dial(os.Getenv("RABBITMQ"))
+	
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -28,7 +30,7 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"phone-book",
+		os.Getenv("QUEUE_NAME"),
 		false,
 		false,
 		false,
@@ -49,7 +51,7 @@ func main() {
 
 	failOnError(err, "Failed to register a consumer")
 	ctx := context.TODO()
-	opts := options.Client().ApplyURI("mongodb://mongo:27017")
+	opts := options.Client().ApplyURI(os.Getenv("MONGO_CONNSTRING"))
 
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
@@ -65,7 +67,7 @@ func main() {
 			if err := json.Unmarshal(d.Body, &contact); err != nil {
 				log.Println("Failed to unmarshal:", err)
 			} else {
-				coll := client.Database("phone-contacts").Collection("contacts")
+				coll := client.Database(os.Getenv("MONGO_DBNAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
 				_, err = coll.InsertOne(context.TODO(), contact)
 				if err != nil {
 					panic(err)
