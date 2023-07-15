@@ -28,6 +28,10 @@ services:
       - rabbitmq
     networks:
       - mynetwork
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - QUEUE_NAME=phone-book
+      - ROUTING_KEY=phone-book
 
   srv_consumer:
     build: ./srv_consumer
@@ -39,8 +43,10 @@ services:
       - mynetwork
     restart: always
     environment:
+      - RABBITMQ_HOST=rabbitmq
       - RABBITMQ=amqp://guest:guest@rabbitmq:5672/
       - QUEUE_NAME=phone-book
+      - ROUTING_KEY=phone-book
       - MONGO_CONNSTRING=mongodb://mongo:27017
       - MONGO_DBNAME=phone-contacts
       - MONGO_COLLECTION_NAME=contacts
