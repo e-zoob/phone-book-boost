@@ -18,6 +18,13 @@ spec:
       containers:
         - name: publisher
           image: "erydegio/srv_publisher"
+          env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: QUEUE_NAME
+              value: phone-book
+            - name: ROUTING_KEY
+              value: phone-book
 ---
 apiVersion: v1
 kind: Service

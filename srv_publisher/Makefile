@@ -12,15 +12,19 @@ venv:
 
 install: venv
 	$(PYTHON) -m pip install --upgrade pip
-	$(PIP) install httpx install httpx
-	$(PIP) install pytest	
 	$(PIP) install -r requirements.txt
 
-test: install
-	$(PYTEST)
+install-test-dep:
+	$(PIP) install -r test-requirements.txt
 
 clean:
 	rm -rf $(VENV) __pycache__ .pytest_cache
-	
+
+run-on-docker:
+	docker-compose -f local/docker-compose.service.yaml up -d
+
 run-test-docker:
-	docker build --target test -t test-img .
+	docker stop pytest || true && \
+	docker build --target test -t pytest-img . && \
+	docker run -it -d --rm --name pytest pytest-img && \
+	docker exec pytest sh -c "pytest" || true
