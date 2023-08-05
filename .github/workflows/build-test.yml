@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and Test
         working-directory: ./srv_publisher
-        run: run-all-tests-compose
+        run: make run-all-tests-compose
 
   go_service:
     runs-on: ubuntu-latest
