@@ -24,6 +24,7 @@ run-on-docker:
 	docker-compose -f local/docker-compose.service.yaml up -d
 
 run-all-tests-compose:
+	docker build --target test -t test .
 	docker-compose -f app/tests/docker-compose.tests.yaml up --build -d 
 	docker-compose -f app/tests/docker-compose.tests.yaml exec -T rabbitmq sh -c "while ! nc -z rabbitmq 5672; do sleep 1; done"
 	docker exec sut bash -c "pytest"
