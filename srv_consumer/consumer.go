@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-    "os"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -21,7 +21,7 @@ func failOnError(err error, msg string) {
 func main() {
 
 	conn, err := amqp.Dial(os.Getenv("RABBITMQ"))
-	
+
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -58,25 +58,32 @@ func main() {
 		panic(err)
 	}
 	defer client.Disconnect(ctx)
+	consumeMessages(msgs, client)
 
-	var forever chan struct{}
+}
 
-	go func() {
-		for d := range msgs {
-			var contact Contact
-			if err := json.Unmarshal(d.Body, &contact); err != nil {
-				log.Println("Failed to unmarshal:", err)
-			} else {
-				coll := client.Database(os.Getenv("MONGO_DBNAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
-				_, err = coll.InsertOne(context.TODO(), contact)
-				if err != nil {
-					panic(err)
-				}
-				log.Printf("Contact saved")
-			}
+func handleMessage(d amqp.Delivery, client *mongo.Client) error {
+	var contact Contact
+	if err := json.Unmarshal(d.Body, &contact); err != nil {
+		log.Println("Failed to unmarshal:", err)
+		return err
+	}
+
+	coll := client.Database(os.Getenv("MONGO_DBNAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
+	_, err := coll.InsertOne(context.TODO(), contact)
+	if err != nil {
+		log.Println("Failed to insert contact:", err)
+		return err
+	}
+
+	log.Printf("Contact saved")
+	return nil
+}
+
+func consumeMessages(msgs <-chan amqp.Delivery, client *mongo.Client) {
+	for d := range msgs {
+		if err := handleMessage(d, client); err != nil {
+			log.Println("Failed to handle message:", err)
 		}
-	}()
-
-	log.Printf(" [*] Consumer is running. To exit press CTRL+C")
-	<-forever
+	}
 }
