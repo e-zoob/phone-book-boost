@@ -1,0 +1,40 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: publisher
+  namespace: default
+  labels:
+    app: publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: publisher
+  template:
+    metadata:
+      labels:
+        app: publisher
+    spec:
+      containers:
+        - name: publisher
+          image: "erydegio/srv_publisher"
+          env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: QUEUE_NAME
+              value: phone-book
+            - name: ROUTING_KEY
+              value: phone-book
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: publisher
+  namespace: default
+spec:
+  selector:
+    app: publisher
+  ports:
+    - name: http
+      targetPort: 80
+      port: 80

@@ -1,26 +1,15 @@
-PYTHON := python3
-VENV := venv
-PIP := $(VENV)/bin/pip
-ACTIVATE := . $(VENV)/bin/activate
-PYTEST := $(VENV)/bin/pytest
+COMPOSE_TESTS_PATH := app/tests/docker-compose.tests.yaml
 
-.PHONY: venv install test clean
+run-on-docker:
+	docker-compose -f local/docker-compose.service.yaml up -d
 
-venv:
-	$(PYTHON) -m venv $(VENV)
-	$(ACTIVATE)
+run-rabbitmq:
+	docker pull rabbitmq:3-management-alpine
+	docker run --pull always --rm -d --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management-alpine
 
-install: venv
-	$(PYTHON) -m pip install --upgrade pip
-	$(PIP) install httpx install httpx
-	$(PIP) install pytest	
-	$(PIP) install -r requirements.txt
-
-test: install
-	$(PYTEST)
-
-clean:
-	rm -rf $(VENV) __pycache__ .pytest_cache
-	
-run-test-docker:
-	docker build --target test -t test-img .
+run-tests-docker:
+	docker build --target test -t test .
+	docker-compose -f $(COMPOSE_TESTS_PATH) up --build -d
+	docker-compose -f $(COMPOSE_TESTS_PATH) exec -T rabbitmq sh -c "while ! nc -z rabbitmq 5672; do sleep 1; done"
+	docker exec sut sh -c "pytest"
+	docker-compose -f $(COMPOSE_TESTS_PATH) down

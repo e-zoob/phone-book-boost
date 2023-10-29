@@ -1,7 +1,7 @@
 name: Build and Test Docker
 
 on: [push]
- 
+
 jobs:
   python_service:
     runs-on: ubuntu-latest
@@ -10,5 +10,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and Test
         working-directory: ./srv_publisher
-        run: make run-test-docker
-    
+        run: make run-tests-docker
+
+  go_service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        working-directory: ./srv_consumer
+        run: make build

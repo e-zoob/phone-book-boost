@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rabbitmq
+  namespace: default
+spec:
+  secretName: rabbitmq
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: rabbitmq.dnsname
+  dnsNames:
+    - rabbitmq.dnsname
