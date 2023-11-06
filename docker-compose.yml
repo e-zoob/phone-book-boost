@@ -22,8 +22,6 @@ services:
   srv_publisher:
     build: ./srv_publisher
     container_name: "publisher"
-    ports:
-      - 80:80
     depends_on:
       - rabbitmq
     networks:
