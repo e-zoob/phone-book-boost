@@ -6,9 +6,6 @@ import (
 	"log"
 	"os"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -50,15 +47,15 @@ func main() {
 	)
 
 	failOnError(err, "Failed to register a consumer")
-	ctx := context.TODO()
-	opts := options.Client().ApplyURI(os.Getenv("MONGO_CONNSTRING"))
 
-	client, err := mongo.Connect(ctx, opts)
+	mongoURI := os.Getenv("MONGO_CONNSTRING")
+	ds, err := NewDatastore(mongoURI)
 	if err != nil {
 		panic(err)
 	}
-	defer client.Disconnect(ctx)
-	consumeMessages(msgs, client)
+
+	defer ds.Client.Disconnect(context.TODO())
+	consumeMessages(msgs, ds)
 
 }
 
