@@ -62,27 +62,19 @@ func main() {
 
 }
 
-func handleMessage(d amqp.Delivery, client *mongo.Client) error {
+func handleMessage(d amqp.Delivery, ds *Datastore) error {
 	var contact Contact
 	if err := json.Unmarshal(d.Body, &contact); err != nil {
 		log.Println("Failed to unmarshal:", err)
 		return err
 	}
 
-	coll := client.Database(os.Getenv("MONGO_DBNAME")).Collection(os.Getenv("MONGO_COLLECTION_NAME"))
-	_, err := coll.InsertOne(context.TODO(), contact)
-	if err != nil {
-		log.Println("Failed to insert contact:", err)
-		return err
-	}
-
-	log.Printf("Contact saved")
-	return nil
+	return ds.SaveContact(contact)
 }
 
-func consumeMessages(msgs <-chan amqp.Delivery, client *mongo.Client) {
+func consumeMessages(msgs <-chan amqp.Delivery, ds *Datastore) {
 	for d := range msgs {
-		if err := handleMessage(d, client); err != nil {
+		if err := handleMessage(d, ds); err != nil {
 			log.Println("Failed to handle message:", err)
 		}
 	}
